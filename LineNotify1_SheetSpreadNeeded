@@ -1,0 +1,49 @@
+var lineToken = 'LineToken';
+var LineText = '';
+
+
+function main() {
+  var ss=SpreadsheetApp.getActiveSpreadsheet();  
+  var sheet = ss.getSheets()[0];
+  var mydate=new Date();
+  var mym=mydate.getMonth()+1;
+  var myd=mydate.getDate();
+  for (var i=0; i<sheet.getLastRow()-1; i++){
+       
+       var target=sheet.getRange(i+2, 1).getValue();
+       var ff=new Date(target);
+       var f12=ff.getMonth()+1;
+       var f34=ff.getDate();
+        var target2=sheet.getRange(i+2, 2).getValue();
+       var ff2=new Date(target2);
+       var f122=ff2.getMonth()+1;
+       var f342=ff2.getDate();
+       if (f12==mym && f34==myd){
+             LineText="Date: "+f122 + "/" + f342 + "\nToDo: " +sheet.getRange(i+2, 3).getValue();
+             sendToLine(LineText);
+             sheet.getRange(i+2, 4).setValue('v');
+         }
+       
+    }
+   
+ }
+
+
+function sendToLine(LineText){
+  var token = lineToken;
+  var URL ="https://i0.wp.com/spacenews.com/wp-content/uploads/2021/07/hubble-sts125release.jpg?fit=879%2C494&ssl=1.com.jpg"
+  var options =
+   {
+     "method": "post",
+     "headers" : {"Authorization" : "Bearer "+ token},
+     "payload":{
+        'message':'\n'+ LineText,
+         'imageThumbnail': URL,
+        'imageFullsize': URL
+     }
+   };
+   UrlFetchApp.fetch("https://notify-api.line.me/api/notify", options);
+}
+
+
+
