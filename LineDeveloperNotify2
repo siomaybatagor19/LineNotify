@@ -1,0 +1,124 @@
+heet=SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1xQki-eGZs0rntrYcdFCCHNCEtocW-OjBWF6IxtiH8/edit#gid=0").getSheets()[0];
+
+
+function sendReplyMessage(CHANNEL_ACCESS_TOKEN, replyToken, replyMessage) {
+  var url = "https://api.line.me/v2/bot/message/reply";
+  UrlFetchApp.fetch(url, {
+    "headers": {
+      "Content-Type": "application/json; charset=UTF-8",
+      "Authorization": "Bearer " + CHANNEL_ACCESS_TOKEN,
+    },
+    "method": "post",
+    "payload": JSON.stringify({
+      "replyToken": replyToken,
+      "messages": replyMessage,
+    }),
+  });
+}
+
+
+function doPost(e) {
+var CHANNEL_ACCESS_TOKEN='4C1un6qqK8lIDdb7t9y9BL/x2bi3ljQrIqRXmpiYOxiUdQHi1Ue7VD84uotwPdLHAB8uZXmY4/PkWa4vSRAByS3kI3cTpkLjIuWJRuylubAFAgNH66hl89YlK+fzTbUd3rTYczvnzxiym6n6ZhQzqAdB04t89/1O/w1cDnyilFU=';
+
+
+
+
+
+
+  var userData = JSON.parse(e.postData.contents);
+ 
+  var clientID = userData.events[0].source.userId;
+ 
+  var searchResult = [];
+  var replyMessage = [];
+  var replyContent="";
+  var replyToken = userData.events[0].replyToken;
+ 
+
+
+  var searchContent = userData.events[0].message.text;
+ /*
+   var two=searchContent.substring(0,6).toLowerCase();  
+   if (two=='record'){
+       var rest=searchContent.substring(7);
+        var x=1;
+          while (sheet.getRange(x, 1).getValue()!==''){
+ 
+        x+=1;
+ 
+         }
+       
+        var f1=rest.substring(0,1);
+        if (f1=='0' || f1=='1' || f1=='' || f1==0 || f1==1){
+       
+              senttoother(rest);
+        }
+         
+      replyContent=rest;
+      replyMessage.push({type:"text", text:replyContent});
+      sendReplyMessage(CHANNEL_ACCESS_TOKEN, replyToken, replyMessage);
+      return;
+   }
+
+
+  if (searchContent.slice(0,1)=='0'||searchContent.slice(0,1)=='1'){
+     
+      var serm=searchContent.slice(0,2);
+      var serd=searchContent.slice(2);
+      for (var i=0; i<sheet.getLastRow()-1; i++){
+          var bookm=new Date(sheet.getRange(i+2,2).getValue()).getMonth()+1;
+          var bookd=new Date(sheet.getRange(i+2,2).getValue()).getDate();
+          if (serm=bookm && serd==bookd){
+              replyContent+=bookm + "/" + bookd + ": " + sheet.getRange(i+2, 3).getValue()+"\n";
+          }
+      }
+     
+   }
+ 
+  for (var i=0; i<sheet.getLastRow()-1; i++){
+         
+          var bookcontent=sheet.getRange(i+2,3).getValue().toLowerCase();
+          if (bookcontent.indexOf(searchContent.toLowerCase())>-1){
+              var bookm=new Date(sheet.getRange(i+2,2).getValue()).getMonth()+1;
+              var bookd=new Date(sheet.getRange(i+2,2).getValue()).getDate();
+              replyContent+=bookm + "/" + bookd + ": " + sheet.getRange(i+2, 3).getValue()+"\n";
+          }
+    }
+
+
+*/
+
+
+   if(!replyContent){
+          replyContent='No schedule'
+    };
+ 
+  replyMessage.push({type:"text", text:replyContent});
+ 
+ // if (replyMessage.length == 0){replyMessage.push({type:"text", text:"No Schedule"});}
+  sendReplyMessage(CHANNEL_ACCESS_TOKEN, replyToken, replyMessage);
+}
+
+
+function senttoother(text){
+ 
+   var f1234=text.substring(0,2)+"/"+text.substring(2,4);
+   var lastday=new Date(f1234);
+   lastday=lastday.getTime()-24*60*60*1000;
+   lastday=new Date(lastday);
+   lastday=(lastday.getMonth()+1) + "/" + lastday.getDate();
+   var remain=text.substring(4).trim();
+   var x=1;
+   while (sheet.getRange(x, 1).getValue()!==''){
+        x+=1;
+   }
+        sheet.getRange(x, 2).setValue(f1234);
+        sheet.getRange(x, 3).setValue(remain);
+        sheet.getRange(x, 1).setValue(lastday);
+
+
+}
+
+
+
+
